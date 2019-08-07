@@ -19,6 +19,11 @@ function App() {
           Learn React
         </a>
       </header>
+      <style jsx>{`
+        p {
+          color: red;
+        }
+      `}</style>
     </div>
   );
 }
