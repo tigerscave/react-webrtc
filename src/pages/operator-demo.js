@@ -1,46 +1,61 @@
 import React from "react";
-import io from 'socket.io-client';
-let socket = null
+import io from "socket.io-client";
+import { connect } from "react-redux";
+import UserList from "../components/operator-demo/user-list";
+
+import { registerSocketEvents as _registerSocketEvents } from "../redux/reducers/socketIo";
 
 class OperatorDemoPage extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      socketId: "",
       myName: ""
-    }
+    };
 
     this.addName = () => {
       const { myName } = this.state;
+      const { socket } = this.props;
       socket.emit("addName", myName);
-    }
+    };
   }
 
   componentDidMount() {
-    socket = io('https://telp-public-server.herokuapp.com/');
-
-    socket.on('connect', () => {
-      this.setState({
-        socketId: socket.id
-      })
-    })
+    const { registerSocketEvents } = this.props;
+    registerSocketEvents();
   }
 
   render() {
-    const { socketId, myName } = this.state
+    const { myName } = this.state;
+    const { socketId, socket } = this.props;
+
     return (
       <div>
         <h1>Operator Demo</h1>
         <p>Your socket id is {socketId}</p>
-        <input
-          onChange={(e) => this.setState({ myName: e.target.value })}
-          onEnter={this.addName}
-        />
+        <input onChange={e => this.setState({ myName: e.target.value })} />
         <button onClick={this.addName}>Join</button>
+        <UserList socket={socket} />
       </div>
     );
-  };
+  }
 }
 
-export default OperatorDemoPage;
+const mapStateToProps = state => {
+  const { socketIo } = state;
+  return {
+    socket: socketIo.socket,
+    socketId: socketIo.socketId
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    registerSocketEvents: () => dispatch(_registerSocketEvents())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OperatorDemoPage);
