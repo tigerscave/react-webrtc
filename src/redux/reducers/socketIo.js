@@ -10,9 +10,16 @@ export const onConnectSocketSuccess = createAction(ON_CONNECT_SOCKET_SUCCESS);
 export const REGISTER_SOCKET_EVENTS = "socket/REGISTER_SOCKET_EVENTS";
 export const registerSocketEvents = createAction(REGISTER_SOCKET_EVENTS);
 
+export const FETCH_USER_LIST = "socket/FETCH_USER_LIST";
+export const fetchUserList = createAction(FETCH_USER_LIST);
+
+export const FETCH_USER_LIST_SUCCESS = "socket/FETCH_USER_LIST_SUCCESS";
+export const fetchUserListSuccess = createAction(FETCH_USER_LIST_SUCCESS);
+
 const INITIAL_STATE = {
   socket: io("https://telp-public-server.herokuapp.com/"),
-  socketId: ""
+  socketId: "",
+  userList: []
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -22,6 +29,13 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         socketId: socket.id
+      };
+    }
+
+    case FETCH_USER_LIST_SUCCESS: {
+      return {
+        ...state,
+        userList: action.payload
       };
     }
 

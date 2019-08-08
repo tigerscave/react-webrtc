@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import { fetchUserList } from "../../redux/reducers/socketIo";
 
 const offerOptions = {
   offerToReceiveAudio: 1,
@@ -10,7 +12,6 @@ class UserList extends React.Component {
     super(props);
 
     this.state = {
-      userList: [],
       localPeerConnection: new RTCPeerConnection(),
       calleeId: "",
       sendChannel: null
@@ -80,12 +81,17 @@ class UserList extends React.Component {
         "icecandidate",
         this.handleOnIceCandidate
       );
+
+      localPeerConnection.addEventListener(
+        "track",
+        this.handleOnTrackConnection
+      );
     };
 
-    this.onReloadButtonClicked = () => {
-      const { socket } = this.props;
-      socket.emit("getUserList");
-    };
+    // this.onReloadButtonClicked = () => {
+    //   const { socket } = this.props;
+    //   socket.emit("getUserList");
+    // };
 
     this.createOfferSuccess = async (calleeId, desc) => {
       const { localPeerConnection } = this.state;
@@ -105,14 +111,14 @@ class UserList extends React.Component {
 
       const desc = await localPeerConnection.createOffer(offerOptions);
 
-      // if (desc) {
-      //   this.setState({
-      //     sendChannel: localPeerConnection.createDataChannel(
-      //       "dataChannel",
-      //       null
-      //     )
-      //   });
-      // }
+      if (desc) {
+        this.setState({
+          sendChannel: localPeerConnection.createDataChannel(
+            "dataChannel",
+            null
+          )
+        });
+      }
     };
 
     this.handleOnTrackConnection = e => {
@@ -128,22 +134,11 @@ class UserList extends React.Component {
 
   componentDidMount() {
     const { socket } = this.props;
-    socket.on("userList", users => {
-      console.log(users);
-      const otherUsers = users.filter(user => user.id !== socket.id);
-      this.setState({
-        userList: otherUsers
-      });
-    });
 
     const { localPeerConnection } = this.state;
 
     socket.on("answerToWarpGo", description => {
       console.log("---socket.on answerToWarpGo---");
-      localPeerConnection.addEventListener(
-        "icecandidate",
-        this.handleOnIceCandidate
-      );
       localPeerConnection
         .setRemoteDescription(description)
         .then(() => {
@@ -166,16 +161,14 @@ class UserList extends React.Component {
           console.log(e);
         });
     });
-
-    localPeerConnection.addEventListener("track", this.handleOnTrackConnection);
   }
 
   render() {
-    const { userList } = this.state;
+    const { onReloadButtonClicked, userList } = this.props;
     return (
       <div>
         <h3>User List</h3>
-        <button onClick={this.onReloadButtonClicked}>Reload</button>
+        <button onClick={onReloadButtonClicked}>Reload</button>
         <ul>
           {userList.map((user, i) => (
             <li key={i}>
@@ -193,4 +186,20 @@ class UserList extends React.Component {
   }
 }
 
-export default UserList;
+const mapStateToProps = state => {
+  const { userList } = state.socketIo;
+  return {
+    userList
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onReloadButtonClicked: () => dispatch(fetchUserList())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserList);
