@@ -11,7 +11,9 @@ class UserList extends React.Component {
 
     this.state = {
       userList: [],
-      localPeerConnection: new RTCPeerConnection()
+      localPeerConnection: new RTCPeerConnection(),
+      calleeId: "",
+      sendChannel: null
     };
 
     this.handleIceConnectionStateChange = e => {
@@ -24,31 +26,38 @@ class UserList extends React.Component {
       console.log("connectionState:", localPeerConnection.connectionState);
     };
 
-    this.createOfferSuccess = async (caleeId, desc) => {
-      const { localPeerConnection } = this.state;
-      const r = await localPeerConnection.setLocalDescription(desc);
-
-      const { socket } = this.props;
-      socket.emit("offer", {
-        desc,
-        userId: caleeId
-      });
-    };
-
-    this.handleNegotiationNeededEvent = async calleeId => {
+    this.handleNegotiationNeededEvent = async () => {
       console.warn("negotiationneeded fired");
-      const { localPeerConnection } = this.state;
+      const { localPeerConnection, calleeId } = this.state;
+      console.log(calleeId);
       const desc = await localPeerConnection.createOffer(offerOptions);
       if (desc) {
-        console.warn("desc");
-        console.warn(desc);
-        console.warn(desc.sdp);
         this.createOfferSuccess(calleeId, desc);
       }
     };
 
-    this.registerPeerConnectionEvents = calleeId => {
+    this.handleSignalingStateChange = () => {
+      console.warn("signalingstatechange fired");
       const { localPeerConnection } = this.state;
+      console.log("signalingState:", localPeerConnection.signalingState);
+      console.log("connectionState:", localPeerConnection.connectionState);
+    };
+
+    this.handleOnIceCandidate = async e => {
+      const { candidate } = e;
+      const { calleeId } = this.state;
+      const { socket } = this.props;
+
+      if (candidate) {
+        socket.emit("new-ice-candidate", {
+          calleeId,
+          candidate
+        });
+      }
+    };
+
+    this.registerPeerConnectionEvents = () => {
+      const { localPeerConnection, calleeId } = this.state;
 
       console.log("connectionState:", localPeerConnection.connectionState);
 
@@ -57,8 +66,19 @@ class UserList extends React.Component {
         this.handleIceConnectionStateChange
       );
 
-      localPeerConnection.addEventListener("negotiationneeded", () =>
-        this.handleNegotiationNeededEvent(calleeId)
+      localPeerConnection.addEventListener(
+        "negotiationneeded",
+        this.handleNegotiationNeededEvent
+      );
+
+      localPeerConnection.addEventListener(
+        "signalingstatechange",
+        this.handleSignalingStateChange
+      );
+
+      localPeerConnection.addEventListener(
+        "icecandidate",
+        this.handleOnIceCandidate
       );
     };
 
@@ -67,9 +87,42 @@ class UserList extends React.Component {
       socket.emit("getUserList");
     };
 
-    this.onCallButtonClicked = calleeId => {
-      console.log(calleeId);
-      this.registerPeerConnectionEvents(calleeId);
+    this.createOfferSuccess = async (calleeId, desc) => {
+      const { localPeerConnection } = this.state;
+      await localPeerConnection.setLocalDescription(desc);
+      const { socket } = this.props;
+      socket.emit("offer", {
+        description: desc,
+        userId: calleeId
+      });
+    };
+
+    this.onCallButtonClicked = async calleeId => {
+      this.setState({ calleeId });
+      this.registerPeerConnectionEvents();
+
+      const { localPeerConnection } = this.state;
+
+      const desc = await localPeerConnection.createOffer(offerOptions);
+
+      // if (desc) {
+      //   this.setState({
+      //     sendChannel: localPeerConnection.createDataChannel(
+      //       "dataChannel",
+      //       null
+      //     )
+      //   });
+      // }
+    };
+
+    this.handleOnTrackConnection = e => {
+      this.refs.vidRef.srcObject = e.streams[0];
+    };
+
+    this.onHogeButtonClicked = () => {
+      console.log("hoge button clicked");
+      const { sendChannel } = this.state;
+      sendChannel.send("HOGE");
     };
   }
 
@@ -82,6 +135,39 @@ class UserList extends React.Component {
         userList: otherUsers
       });
     });
+
+    const { localPeerConnection } = this.state;
+
+    socket.on("answerToWarpGo", description => {
+      console.log("---socket.on answerToWarpGo---");
+      localPeerConnection.addEventListener(
+        "icecandidate",
+        this.handleOnIceCandidate
+      );
+      localPeerConnection
+        .setRemoteDescription(description)
+        .then(() => {
+          console.warn("---setRemoteDescription---");
+          console.log(localPeerConnection);
+          console.log(localPeerConnection.getSenders());
+          console.log("signalingState", localPeerConnection.signalingState);
+          console.log(
+            "iceConnectionState",
+            localPeerConnection.iceConnectionState
+          );
+          console.log(
+            "iceGatheringState",
+            localPeerConnection.iceGatheringState
+          );
+          console.log("connectionState", localPeerConnection.connectionState);
+        })
+        .catch(e => {
+          console.warn("ERROR: setRemoteDescription");
+          console.log(e);
+        });
+    });
+
+    localPeerConnection.addEventListener("track", this.handleOnTrackConnection);
   }
 
   render() {
@@ -100,6 +186,8 @@ class UserList extends React.Component {
             </li>
           ))}
         </ul>
+        <video ref="vidRef" autoPlay />
+        <button onClick={this.onHogeButtonClicked}>send hoge</button>
       </div>
     );
   }
