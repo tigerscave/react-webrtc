@@ -7,6 +7,8 @@ import {
   assignDataChannel as _assignDataChannel
 } from "../../redux/reducers/rtc";
 
+import VideoWindow from "./video-window";
+
 const offerOptions = {
   offerToReceiveAudio: 1,
   offerToReceiveVideo: 1
@@ -15,6 +17,11 @@ const offerOptions = {
 class UserList extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      isModalShown: false
+    };
+
+    this.videoRef = React.createRef()
 
     this.onCallButtonClicked = calleeId => {
       const {
@@ -36,22 +43,18 @@ class UserList extends React.PureComponent {
 
     this.playVideoButtonClicked = () => {
       const { videoSrcObject } = this.props;
-      this.refs.vidRef.srcObject = videoSrcObject;
+      this.videoRef.current.srcObject = videoSrcObject;
     };
 
     this.openNewWindow = () => {
-      window.open(
-        "/video-window",
-        "",
-        "width=1200,height=800,left=200,top=200"
-      );
-      // this.setState({
-      //   isModalShown: true
-      // })
+      this.setState({
+        isModalShown: true
+      });
     };
   }
 
   render() {
+    const { isModalShown } = this.state;
     const { onReloadButtonClicked, userList, videoSrcObject } = this.props;
     return (
       <div>
@@ -67,12 +70,13 @@ class UserList extends React.PureComponent {
             </li>
           ))}
         </ul>
-        <video ref="vidRef" autoPlay />
+        <video ref={this.videoRef} autoPlay />
         <button onClick={this.playVideoButtonClicked}>PLAY VIDEO</button>
         <button onClick={this.onHogeButtonClicked}>send hoge</button>
         <div>
           <button onClick={this.openNewWindow}>新規ウィンドウで開く</button>
         </div>
+        {isModalShown && <VideoWindow videoSrcObject={videoSrcObject} />}
       </div>
     );
   }
