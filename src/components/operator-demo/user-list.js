@@ -21,7 +21,7 @@ class UserList extends React.PureComponent {
       isModalShown: false
     };
 
-    this.videoRef = React.createRef()
+    this.videoRef = React.createRef();
 
     this.onCallButtonClicked = calleeId => {
       const {
