@@ -1,6 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { fetchUserList } from "../../redux/reducers/socketIo";
+import {
+  assignCalleeId as _assignCalleeId,
+  registerPeerEvents as _registerPeerEvents,
+  assignDataChannel as _assignDataChannel
+} from "../../redux/reducers/rtc";
 
 const offerOptions = {
   offerToReceiveAudio: 1,
@@ -11,160 +16,32 @@ class UserList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      localPeerConnection: new RTCPeerConnection(),
-      calleeId: "",
-      sendChannel: null
-    };
+    this.onCallButtonClicked = calleeId => {
+      const {
+        assignCalleeId,
+        registerPeerEvents,
+        assignDataChannel
+      } = this.props;
 
-    this.handleIceConnectionStateChange = e => {
-      const { localPeerConnection } = this.state;
-      console.warn("iceconnectionstatechange fired");
-      console.log(
-        "iceConnectionState:",
-        localPeerConnection.iceConnectionState
-      );
-      console.log("connectionState:", localPeerConnection.connectionState);
-    };
-
-    this.handleNegotiationNeededEvent = async () => {
-      console.warn("negotiationneeded fired");
-      const { localPeerConnection, calleeId } = this.state;
-      console.log(calleeId);
-      const desc = await localPeerConnection.createOffer(offerOptions);
-      if (desc) {
-        this.createOfferSuccess(calleeId, desc);
-      }
-    };
-
-    this.handleSignalingStateChange = () => {
-      console.warn("signalingstatechange fired");
-      const { localPeerConnection } = this.state;
-      console.log("signalingState:", localPeerConnection.signalingState);
-      console.log("connectionState:", localPeerConnection.connectionState);
-    };
-
-    this.handleOnIceCandidate = async e => {
-      const { candidate } = e;
-      const { calleeId } = this.state;
-      const { socket } = this.props;
-
-      if (candidate) {
-        socket.emit("new-ice-candidate", {
-          calleeId,
-          candidate
-        });
-      }
-    };
-
-    this.registerPeerConnectionEvents = () => {
-      const { localPeerConnection, calleeId } = this.state;
-
-      console.log("connectionState:", localPeerConnection.connectionState);
-
-      localPeerConnection.addEventListener(
-        "iceconnectionstatechange",
-        this.handleIceConnectionStateChange
-      );
-
-      localPeerConnection.addEventListener(
-        "negotiationneeded",
-        this.handleNegotiationNeededEvent
-      );
-
-      localPeerConnection.addEventListener(
-        "signalingstatechange",
-        this.handleSignalingStateChange
-      );
-
-      localPeerConnection.addEventListener(
-        "icecandidate",
-        this.handleOnIceCandidate
-      );
-
-      localPeerConnection.addEventListener(
-        "track",
-        this.handleOnTrackConnection
-      );
-    };
-
-    // this.onReloadButtonClicked = () => {
-    //   const { socket } = this.props;
-    //   socket.emit("getUserList");
-    // };
-
-    this.createOfferSuccess = async (calleeId, desc) => {
-      const { localPeerConnection } = this.state;
-      await localPeerConnection.setLocalDescription(desc);
-      const { socket } = this.props;
-      socket.emit("offer", {
-        description: desc,
-        userId: calleeId
-      });
-    };
-
-    this.onCallButtonClicked = async calleeId => {
-      this.setState({ calleeId });
-      this.registerPeerConnectionEvents();
-
-      const { localPeerConnection } = this.state;
-
-      const desc = await localPeerConnection.createOffer(offerOptions);
-
-      if (desc) {
-        this.setState({
-          sendChannel: localPeerConnection.createDataChannel(
-            "dataChannel",
-            null
-          )
-        });
-      }
-    };
-
-    this.handleOnTrackConnection = e => {
-      this.refs.vidRef.srcObject = e.streams[0];
+      assignCalleeId(calleeId);
+      registerPeerEvents();
+      assignDataChannel();
     };
 
     this.onHogeButtonClicked = () => {
       console.log("hoge button clicked");
-      const { sendChannel } = this.state;
+      const { sendChannel } = this.props;
       sendChannel.send("HOGE");
+    };
+
+    this.playVideoButtonClicked = () => {
+      const { videoSrcObject } = this.props;
+      this.refs.vidRef.srcObject = videoSrcObject;
     };
   }
 
-  componentDidMount() {
-    const { socket } = this.props;
-
-    const { localPeerConnection } = this.state;
-
-    socket.on("answerToWarpGo", description => {
-      console.log("---socket.on answerToWarpGo---");
-      localPeerConnection
-        .setRemoteDescription(description)
-        .then(() => {
-          console.warn("---setRemoteDescription---");
-          console.log(localPeerConnection);
-          console.log(localPeerConnection.getSenders());
-          console.log("signalingState", localPeerConnection.signalingState);
-          console.log(
-            "iceConnectionState",
-            localPeerConnection.iceConnectionState
-          );
-          console.log(
-            "iceGatheringState",
-            localPeerConnection.iceGatheringState
-          );
-          console.log("connectionState", localPeerConnection.connectionState);
-        })
-        .catch(e => {
-          console.warn("ERROR: setRemoteDescription");
-          console.log(e);
-        });
-    });
-  }
-
   render() {
-    const { onReloadButtonClicked, userList } = this.props;
+    const { onReloadButtonClicked, userList, videoSrcObject } = this.props;
     return (
       <div>
         <h3>User List</h3>
@@ -180,6 +57,7 @@ class UserList extends React.Component {
           ))}
         </ul>
         <video ref="vidRef" autoPlay />
+        <button onClick={this.playVideoButtonClicked}>PLAY VIDEO</button>
         <button onClick={this.onHogeButtonClicked}>send hoge</button>
       </div>
     );
@@ -188,14 +66,20 @@ class UserList extends React.Component {
 
 const mapStateToProps = state => {
   const { userList } = state.socketIo;
+  const { videoSrcObject, sendChannel } = state.rtc;
   return {
-    userList
+    userList,
+    videoSrcObject,
+    sendChannel
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onReloadButtonClicked: () => dispatch(fetchUserList())
+    onReloadButtonClicked: () => dispatch(fetchUserList()),
+    assignCalleeId: id => dispatch(_assignCalleeId(id)),
+    registerPeerEvents: () => dispatch(_registerPeerEvents()),
+    assignDataChannel: () => dispatch(_assignDataChannel())
   };
 };
 

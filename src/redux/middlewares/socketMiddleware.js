@@ -3,6 +3,7 @@ import * as socketIoAction from "../reducers/socketIo";
 const socketMiddleware = store => next => action => {
   next(action);
   const { socket } = store.getState().socketIo;
+  const { peerConnection } = store.getState().rtc;
 
   if (action.type === socketIoAction.REGISTER_SOCKET_EVENTS) {
     socket.on("connect", () => {
@@ -12,6 +13,18 @@ const socketMiddleware = store => next => action => {
     socket.on("userList", users => {
       const otherUsers = users.filter(user => user.id !== socket.id);
       store.dispatch(socketIoAction.fetchUserListSuccess(otherUsers));
+    });
+
+    socket.on("answerToWarpGo", description => {
+      console.log("---socket.on answerToWarpGo---");
+      peerConnection
+        .setRemoteDescription(description)
+        .then(() => {
+          console.log("set remote description success");
+        })
+        .catch(e => {
+          console.warn("ERROR: setRemoteDescription");
+        });
     });
   }
 
