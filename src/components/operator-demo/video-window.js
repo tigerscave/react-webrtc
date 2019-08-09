@@ -18,6 +18,14 @@ class VideoWindow extends React.Component {
         <div>
           <video ref={this.videoRef} autoPlay />
           <button onClick={this.onVideoButtonClicked}>video</button>
+          <div>
+            <p>FPS</p>
+            <select>
+              <option>1</option>
+              <option>5</option>
+              <option>10</option>
+            </select>
+          </div>
           <style jsx>{`
             video {
               width: 20rem;
