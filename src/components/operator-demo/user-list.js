@@ -12,7 +12,7 @@ const offerOptions = {
   offerToReceiveVideo: 1
 };
 
-class UserList extends React.Component {
+class UserList extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -38,6 +38,17 @@ class UserList extends React.Component {
       const { videoSrcObject } = this.props;
       this.refs.vidRef.srcObject = videoSrcObject;
     };
+
+    this.openNewWindow = () => {
+      window.open(
+        "/video-window",
+        "",
+        "width=1200,height=800,left=200,top=200"
+      );
+      // this.setState({
+      //   isModalShown: true
+      // })
+    };
   }
 
   render() {
@@ -59,6 +70,9 @@ class UserList extends React.Component {
         <video ref="vidRef" autoPlay />
         <button onClick={this.playVideoButtonClicked}>PLAY VIDEO</button>
         <button onClick={this.onHogeButtonClicked}>send hoge</button>
+        <div>
+          <button onClick={this.openNewWindow}>新規ウィンドウで開く</button>
+        </div>
       </div>
     );
   }
