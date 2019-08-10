@@ -1,9 +1,9 @@
 import React from "react";
 
 const OperatorStatus = () => (
-  <div>
-    <h3>マイロボット</h3>
+  <div className="container">
     <div>
+      <h3>マイロボット</h3>
       <i className="fas fa-user-circle"></i>
     </div>
     <div>
@@ -17,7 +17,12 @@ const OperatorStatus = () => (
       </ul>
     </div>
     <style jsx>{`
-      img {
+      .container {
+        display: flex;
+        align-items: center;
+      }
+
+      ul li:first img {
         width: 10rem;
       }
     `}</style>

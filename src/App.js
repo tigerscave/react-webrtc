@@ -20,6 +20,7 @@ const App = () => {
       <style jsx global>{`
         body {
           font-family: sans-serif;
+          margin: 0;
         }
       `}</style>
     </Router>

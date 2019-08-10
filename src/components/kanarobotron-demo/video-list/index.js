@@ -30,6 +30,14 @@ class VideoList extends React.Component {
             <VideoContainer device={device} key={i} />
           ))}
         </ul>
+        <style jsx>{`
+          ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+          }
+        `}</style>
       </div>
     );
   }
