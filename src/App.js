@@ -11,6 +11,11 @@ const App = () => {
       <Route path="/" exact component={IndexPage} />
       <Route path="/operator-demo" exact component={OperatorDemoPage} />
       <Route path="/kanarobotron-demo" exact component={KanarobotronDemoPage} />
+      <style jsx global>{`
+        body {
+          font-family: sans-serif;
+        }
+      `}</style>
     </Router>
   );
 };

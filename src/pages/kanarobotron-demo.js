@@ -2,6 +2,8 @@ import React from "react";
 
 import NavBar from "../components/kanarobotron-demo/navbar";
 import ConnectionSummary from "../components/kanarobotron-demo/connection-summary";
+import VideoList from "../components/kanarobotron-demo/video-list";
+import AudioList from "../components/kanarobotron-demo/audio-list";
 
 class KanarobotronDemoPage extends React.Component {
   render() {
@@ -9,9 +11,8 @@ class KanarobotronDemoPage extends React.Component {
       <div>
         <NavBar />
         <ConnectionSummary />
-        {/*        <VideoList />
-        <AudioList />*/}
-        <h1>KanaroboTron</h1>
+        <VideoList />
+        <AudioList />
       </div>
     );
   }
