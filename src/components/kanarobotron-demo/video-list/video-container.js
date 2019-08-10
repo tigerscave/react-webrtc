@@ -33,6 +33,9 @@ class VideoContainer extends React.Component {
           <p>デバイス名 : {device.label}</p>
         </div>
         <style jsx>{`
+          li {
+            width: 100%;
+          }
           video {
             width: 20rem;
           }

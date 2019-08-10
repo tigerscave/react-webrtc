@@ -22,9 +22,16 @@ class KanarobotronDemoPage extends React.Component {
     return (
       <div>
         <NavBar />
-        <ConnectionSummary />
-        <VideoList />
-        <AudioList />
+        <div className="content">
+          <ConnectionSummary />
+          <VideoList />
+          <AudioList />
+        </div>
+        <style jsx>{`
+          .content {
+            margin: 0 5rem;
+          }
+        `}</style>
       </div>
     );
   }
