@@ -8,10 +8,10 @@ const ConnectionSummary = () => (
     <KanaroboStatus />
     <div>
       <p>
-        <i class="fas fa-long-arrow-alt-right"></i>
+        <i className="fas fa-long-arrow-alt-right"></i>
       </p>
       <p>
-        <i class="fas fa-long-arrow-alt-left"></i>
+        <i className="fas fa-long-arrow-alt-left"></i>
       </p>
     </div>
     <OperatorStatus />
