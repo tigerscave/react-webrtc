@@ -1,5 +1,4 @@
 import React from "react";
-import BackFourImg from "../../../assets/images/backfour.png";
 
 const OperatorStatus = () => (
   <div>

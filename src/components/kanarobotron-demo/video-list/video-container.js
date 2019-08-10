@@ -6,15 +6,12 @@ class VideoContainer extends React.Component {
     this.localVideoRef = React.createRef();
 
     this.gotLocalVideoStream = mediaStream => {
-      console.log("this.localVideoRef");
-      console.log(this.localVideoRef);
       this.localVideoRef.current.srcObject = mediaStream;
     };
   }
 
   componentDidMount = async () => {
     const { device } = this.props;
-    console.warn("device.id", device);
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: {

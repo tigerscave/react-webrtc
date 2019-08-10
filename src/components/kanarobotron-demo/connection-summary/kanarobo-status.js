@@ -5,7 +5,7 @@ const KanaroboStatus = () => (
   <div>
     <h3>マイロボット</h3>
     <div>
-      <img src={BackFourImg} />
+      <img src={BackFourImg} alt="BackFourImg" />
     </div>
     <div>
       <ul>
