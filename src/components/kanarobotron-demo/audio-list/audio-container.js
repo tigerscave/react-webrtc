@@ -1,10 +1,6 @@
 import React from "react";
 
 class AudioContainer extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { device } = this.props;
     return (

@@ -1,5 +1,4 @@
 import React from "react";
-import io from "socket.io-client";
 import { connect } from "react-redux";
 import UserList from "../components/operator-demo/user-list";
 
@@ -26,7 +25,6 @@ class OperatorDemoPage extends React.Component {
   }
 
   render() {
-    const { myName } = this.state;
     const { socketId, socket } = this.props;
 
     return (

@@ -10,6 +10,9 @@ const IndexPage = () => {
       <p>
         <Link to="/kanarobotron-demo">Kanarobotron demo</Link>
       </p>
+      <p>
+        <Link to="/kanarobotron-regist-name">Kanarobotron regist name</Link>
+      </p>
     </div>
   );
 };

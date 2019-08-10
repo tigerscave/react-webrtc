@@ -1,4 +1,3 @@
-import * as socketIoAction from "../reducers/socketIo";
 import * as rtcAction from "../reducers/rtc";
 
 const offerOptions = {

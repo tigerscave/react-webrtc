@@ -9,11 +9,6 @@ import {
 
 import VideoWindow from "./video-window";
 
-const offerOptions = {
-  offerToReceiveAudio: 1,
-  offerToReceiveVideo: 1
-};
-
 class UserList extends React.PureComponent {
   constructor(props) {
     super(props);
