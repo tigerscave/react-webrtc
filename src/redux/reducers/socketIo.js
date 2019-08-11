@@ -23,8 +23,7 @@ export const UPDATE_REMOTE_VIDEO_FPS = "rtc/UPDATE_REMOTE_VIDEO_FPS";
 export const updateRemoteVideoFps = createAction(UPDATE_REMOTE_VIDEO_FPS);
 
 const INITIAL_STATE = {
-  //socket: io("https://telp-public-server.herokuapp.com/"),
-  socket: io("http://localhost:5353/"),
+  socket: io("https://telp-public-server.herokuapp.com/"),
   socketId: "",
   userList: []
 };
