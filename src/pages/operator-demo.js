@@ -41,9 +41,14 @@ class OperatorDemoPage extends React.Component {
           <AudioList />
         </div>
         <hr />
-        <UserList socket={socket} />
+        <div className="userList">
+          <UserList socket={socket} />
+        </div>
         <style jsx>{`
         .content {
+          margin: 0 5rem;
+        }
+        .userList {
           margin: 0 5rem;
         }
       `}</style>
