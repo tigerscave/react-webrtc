@@ -12,8 +12,8 @@ const rtcMiddleware = store => next => async action => {
   const { socket } = store.getState().socketIo;
 
   if (action.type === rtcAction.REGISTER_PEER_EVENTS) {
-    peerConnection.addEventListener("iceconnectionstatechange", e =>
-      store.dispatch(rtcAction.iceConnectionStateChange(e))
+    peerConnection.addEventListener("iceconnectionstatechange", () =>
+      store.dispatch(rtcAction.iceConnectionStateChange())
     );
 
     peerConnection.addEventListener("negotiationneeded", () =>

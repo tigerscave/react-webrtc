@@ -54,9 +54,6 @@ const reducer = (state = INITIAL_STATE, action) => {
     }
 
     case ICE_CONNECTION_STATE_CHANGE: {
-      console.warn("ICE_CONNECTION_STATE_CHANGE");
-      console.log(action.payload);
-
       const { peerConnection } = state;
 
       return {

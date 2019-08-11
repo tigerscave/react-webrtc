@@ -11,11 +11,18 @@ import {
   createUserName as _createUserName
 } from "../redux/reducers/tronSocketIo";
 
+import { registerPeerEvents as _registerPeerEvents } from "../redux/reducers/tronRtc";
+
 class KanarobotronDemoPage extends React.Component {
   componentDidMount() {
-    const { registerSocketEvents, createUserName } = this.props;
+    const {
+      registerSocketEvents,
+      createUserName,
+      registerPeerEvents
+    } = this.props;
     registerSocketEvents();
     createUserName();
+    registerPeerEvents();
   }
 
   render() {
@@ -40,7 +47,8 @@ class KanarobotronDemoPage extends React.Component {
 const mapDispatchToProps = dispatch => {
   return {
     registerSocketEvents: () => dispatch(_registerSocketEvents()),
-    createUserName: () => dispatch(_createUserName())
+    createUserName: () => dispatch(_createUserName()),
+    registerPeerEvents: () => dispatch(_registerPeerEvents())
   };
 };
 

@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import { addVideoTrack as _addVideoTrack } from "../../../redux/reducers/tronRtc";
 
 class VideoContainer extends React.Component {
   constructor(props) {
@@ -7,6 +9,9 @@ class VideoContainer extends React.Component {
 
     this.gotLocalVideoStream = mediaStream => {
       this.localVideoRef.current.srcObject = mediaStream;
+
+      const { addVideoTrack } = this.props;
+      addVideoTrack(mediaStream);
     };
   }
 
@@ -45,4 +50,13 @@ class VideoContainer extends React.Component {
   }
 }
 
-export default VideoContainer;
+const mapDispatchToProps = dispatch => {
+  return {
+    addVideoTrack: mediaStream => dispatch(_addVideoTrack(mediaStream))
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(VideoContainer);
