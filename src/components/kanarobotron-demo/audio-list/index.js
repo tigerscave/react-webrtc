@@ -35,6 +35,17 @@ class AudioList extends React.Component {
             <AudioContainer device={device} key={i} />
           ))}
         </ul>
+        <style jsx>{`
+          h3 {
+            margin: 0 0 0.3rem 0;
+          }
+          ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+          }
+        `}</style>
       </div>
     );
   }

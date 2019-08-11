@@ -23,7 +23,7 @@ class VideoList extends React.Component {
   render() {
     const { videoDevices } = this.state;
     return (
-      <div>
+      <div className="container">
         <h3>カメラ一覧</h3>
         <ul>
           {videoDevices.map((device, i) => (
@@ -31,6 +31,12 @@ class VideoList extends React.Component {
           ))}
         </ul>
         <style jsx>{`
+          .container {
+            margin: 4rem 0;
+          }
+          h3 {
+            margin: 0 0 0.5rem 0;
+          }
           ul {
             display: flex;
             list-style: none;

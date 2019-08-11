@@ -22,6 +22,9 @@ const ConnectionSummary = () => (
       <OperatorStatus />
     </li>
     <style jsx>{`
+      .container {
+        margin: 2rem 0 0 0;
+      }
       ul {
         display: flex;
         list-style: none;
@@ -34,7 +37,12 @@ const ConnectionSummary = () => (
       .icons {
         display: flex;
         align-items: center;
-        // justify-content: center;
+      }
+      .icons div {
+        margin-left: 7rem;
+      }
+      .icons div p {
+        margin: 0;
       }
       i {
         font-size: 5rem;
