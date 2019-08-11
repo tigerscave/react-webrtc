@@ -6,7 +6,7 @@ const ConnectionSummary = () => {
   return (
     <div>
       <OperatorStatus />
-      <i class="fas fa-unlink"></i>
+      <i className="fas fa-unlink"></i>
       <KanaroboStatus />
     </div>
   );

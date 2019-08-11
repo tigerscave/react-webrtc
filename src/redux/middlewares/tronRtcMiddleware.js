@@ -48,6 +48,20 @@ const tronRtcMiddleware = store => next => async action => {
     const candidate = action.payload;
     peerConnection.addIceCandidate(candidate);
   }
+
+  if (action.type === tronRtcAction.REPLACE_VIDEO_TRACK) {
+    const mediaStream = action.payload;
+
+    const videoTrack = mediaStream.getVideoTracks()[0];
+    const sender = peerConnection.getSenders().find(s => {
+      if (s.track) {
+        return s.track.label === videoTrack.label;
+      } else {
+        return false;
+      }
+    });
+    if (sender) sender.replaceTrack(videoTrack);
+  }
 };
 
 export default tronRtcMiddleware;

@@ -27,6 +27,9 @@ export const addVideoTrack = createAction(ADD_VIDEO_TRACK);
 export const HANDLE_NEW_ICE_CANDIDATE = "tronRtc/HANDLE_NEW_ICE_CANDIDATE";
 export const handleNewIceCandidate = createAction(HANDLE_NEW_ICE_CANDIDATE);
 
+export const REPLACE_VIDEO_TRACK = "tronRtc/REPLACE_VIDEO_TRACK";
+export const replaceVideoTrack = createAction(REPLACE_VIDEO_TRACK);
+
 const INITIAL_STATE = {
   callerId: "",
   peerConnection: new RTCPeerConnection(),

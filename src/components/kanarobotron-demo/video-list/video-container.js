@@ -1,41 +1,68 @@
 import React from "react";
 import { connect } from "react-redux";
-import { addVideoTrack as _addVideoTrack } from "../../../redux/reducers/tronRtc";
+import {
+  addVideoTrack as _addVideoTrack,
+  replaceVideoTrack as _replaceVideoTrack
+} from "../../../redux/reducers/tronRtc";
 
 class VideoContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      frameRate: 1
+    };
     this.localVideoRef = React.createRef();
 
-    this.gotLocalVideoStream = mediaStream => {
+    this.setLocalVideoStream = mediaStream => {
       this.localVideoRef.current.srcObject = mediaStream;
+    };
 
-      const { addVideoTrack } = this.props;
-      addVideoTrack(mediaStream);
+    this.onSelectChanged = e => {
+      const frameRate = e.target.value;
+      this.setState({ frameRate });
+      this.getUserVideoMedia(frameRate, true);
+    };
+
+    this.getUserVideoMedia = async (frameRate, shouldUpdate) => {
+      const { device } = this.props;
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          deviceId: device.deviceId,
+          frameRate: {
+            max: frameRate
+          }
+        }
+      });
+
+      const { addVideoTrack, replaceVideoTrack } = this.props;
+
+      if (shouldUpdate) {
+        replaceVideoTrack(mediaStream);
+      } else {
+        addVideoTrack(mediaStream);
+      }
+      this.setLocalVideoStream(mediaStream);
     };
   }
 
   componentDidMount = async () => {
-    const { device } = this.props;
-    const mediaStream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: {
-        deviceId: device.deviceId,
-        frameRate: {
-          max: 1
-        }
-      }
-    });
-    this.gotLocalVideoStream(mediaStream);
+    this.getUserVideoMedia(1);
   };
 
   render() {
     const { device } = this.props;
+    const { frameRate } = this.state;
     return (
       <li>
         <div>
           <video ref={this.localVideoRef} autoPlay />
           <p>デバイス名 : {device.label}</p>
+          <select value={frameRate} onChange={this.onSelectChanged}>
+            <option value={1}>1 FPS</option>
+            <option value={5}>5 FPS</option>
+            <option value={10}>10 FPS</option>
+          </select>
         </div>
         <style jsx>{`
           li {
@@ -52,7 +79,8 @@ class VideoContainer extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addVideoTrack: mediaStream => dispatch(_addVideoTrack(mediaStream))
+    addVideoTrack: mediaStream => dispatch(_addVideoTrack(mediaStream)),
+    replaceVideoTrack: mediaStream => dispatch(_replaceVideoTrack(mediaStream))
   };
 };
 
