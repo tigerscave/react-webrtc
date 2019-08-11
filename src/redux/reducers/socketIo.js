@@ -16,8 +16,15 @@ export const fetchUserList = createAction(FETCH_USER_LIST);
 export const FETCH_USER_LIST_SUCCESS = "socket/FETCH_USER_LIST_SUCCESS";
 export const fetchUserListSuccess = createAction(FETCH_USER_LIST_SUCCESS);
 
+export const REPLACE_VIDEO_TRACK = "tronRtc/REPLACE_VIDEO_TRACK";
+export const replaceVideoTrack = createAction(REPLACE_VIDEO_TRACK);
+
+export const UPDATE_REMOTE_VIDEO_FPS = "rtc/UPDATE_REMOTE_VIDEO_FPS";
+export const updateRemoteVideoFps = createAction(UPDATE_REMOTE_VIDEO_FPS);
+
 const INITIAL_STATE = {
-  socket: io("https://telp-public-server.herokuapp.com/"),
+  //socket: io("https://telp-public-server.herokuapp.com/"),
+  socket: io("http://localhost:5353/"),
   socketId: "",
   userList: []
 };

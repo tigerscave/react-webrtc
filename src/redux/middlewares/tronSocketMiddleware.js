@@ -12,19 +12,31 @@ const tronSocketMiddleware = store => next => action => {
     });
 
     socket.on("offerFromWarpGo", data => {
-      console.warn("offerFromWarpGo");
-      console.log(data);
       store.dispatch(tronRtcAction.receiveDescription(data));
     });
 
     socket.on("new-ice-candidate", candidate => {
       store.dispatch(tronRtcAction.handleNewIceCandidate(candidate));
     });
+
+    socket.on("message", data => {
+      switch (data.label) {
+        case "updateFps": {
+          const { fps, mediaStreamId } = data.value;
+
+          // TASK: refactoring this from here to media action
+          store.dispatch(tronRtcAction.updateVideoFps({ fps, mediaStreamId }));
+          break;
+        }
+
+        default:
+          return null;
+      }
+    });
   }
 
   if (action.type === tronSocketIoAction.CREATE_USER_NAME) {
     const roidName = localStorage.getItem("roidName");
-    console.log("roidName : ", roidName);
     socket.emit("addName", roidName);
   }
 };

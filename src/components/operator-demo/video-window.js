@@ -1,5 +1,8 @@
 import React from "react";
 import NewWindow from "react-new-window";
+import { connect } from "react-redux";
+
+import { updateRemoteVideoFps as _updateRemoteVideoFps } from "../../redux/reducers/socketIo";
 
 class VideoWindow extends React.Component {
   constructor(props) {
@@ -16,8 +19,20 @@ class VideoWindow extends React.Component {
     };
 
     this.onFpsChanged = e => {
+      const fps = e.target.value;
       this.setState({
-        selectedFps: e.target.value
+        selectedFps: fps
+      });
+
+      const { videoSrcObject } = this.props;
+
+      console.log(videoSrcObject);
+      console.log(videoSrcObject.getVideoTracks());
+
+      const { updateRemoteVideoFps } = this.props;
+      updateRemoteVideoFps({
+        fps,
+        mediaStreamId: videoSrcObject.id
       });
     };
   }
@@ -32,9 +47,9 @@ class VideoWindow extends React.Component {
           <div>
             <p>FPS</p>
             <select value={selectedFps} onChange={this.onFpsChanged}>
-              <option value={1}>1</option>
-              <option value={5}>5</option>
-              <option value={10}>10</option>
+              <option value={1}>1 FPS</option>
+              <option value={5}>5 FPS</option>
+              <option value={10}>10 FPS</option>
             </select>
           </div>
           <style jsx>{`
@@ -51,4 +66,13 @@ class VideoWindow extends React.Component {
   }
 }
 
-export default VideoWindow;
+const mapDispatchToProps = dispatch => {
+  return {
+    updateRemoteVideoFps: fps => dispatch(_updateRemoteVideoFps(fps))
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(VideoWindow);

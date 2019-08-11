@@ -3,7 +3,7 @@ import * as socketIoAction from "../reducers/socketIo";
 const socketMiddleware = store => next => action => {
   next(action);
   const { socket } = store.getState().socketIo;
-  const { peerConnection } = store.getState().rtc;
+  const { peerConnection, calleeId } = store.getState().rtc;
 
   if (action.type === socketIoAction.REGISTER_SOCKET_EVENTS) {
     socket.on("connect", () => {
@@ -30,6 +30,20 @@ const socketMiddleware = store => next => action => {
 
   if (action.type === socketIoAction.FETCH_USER_LIST) {
     socket.emit("getUserList");
+  }
+
+  if (action.type === socketIoAction.UPDATE_REMOTE_VIDEO_FPS) {
+    const { fps, mediaStreamId } = action.payload;
+    socket.emit("message", {
+      calleeId,
+      message: {
+        label: "updateFps",
+        value: {
+          fps,
+          mediaStreamId
+        }
+      }
+    });
   }
 };
 

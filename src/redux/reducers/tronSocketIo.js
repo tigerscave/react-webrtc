@@ -11,7 +11,8 @@ export const CREATE_USER_NAME = "tronSocketIo/CREATE_USER_NAME";
 export const createUserName = createAction(CREATE_USER_NAME);
 
 const INITIAL_STATE = {
-  socket: io("https://telp-public-server.herokuapp.com/"),
+  //socket: io("https://telp-public-server.herokuapp.com/"),
+  socket: io("http://localhost:5353/"),
   socketId: "",
   userList: []
 };

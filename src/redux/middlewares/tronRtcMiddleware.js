@@ -34,14 +34,15 @@ const tronRtcMiddleware = store => next => async action => {
     });
   }
 
+  // TASK: refactoring this from here to media middleware
   if (action.type === tronRtcAction.ADD_VIDEO_TRACK) {
     const mediaStream = action.payload;
     console.log(mediaStream);
     console.log(mediaStream.getTracks());
 
-    mediaStream
-      .getTracks()
-      .forEach(track => peerConnection.addTrack(track, mediaStream));
+    mediaStream.getTracks().forEach(track => {
+      peerConnection.addTrack(track, mediaStream);
+    });
   }
 
   if (action.type === tronRtcAction.HANDLE_NEW_ICE_CANDIDATE) {
@@ -49,6 +50,7 @@ const tronRtcMiddleware = store => next => async action => {
     peerConnection.addIceCandidate(candidate);
   }
 
+  // TASK: refactoring this from here to media middleware
   if (action.type === tronRtcAction.REPLACE_VIDEO_TRACK) {
     const mediaStream = action.payload;
 
@@ -61,6 +63,31 @@ const tronRtcMiddleware = store => next => async action => {
       }
     });
     if (sender) sender.replaceTrack(videoTrack);
+  }
+
+  // TASK: refactoring this from here to media middleware
+  if (action.type === tronRtcAction.UPDATE_VIDEO_FPS) {
+    const { fps, mediaStreamId } = action.payload;
+
+    // find deviceId from mediaStream.id
+    const localStreams = peerConnection.getLocalStreams();
+    const targetMediaStream = localStreams.find(s => s.id === mediaStreamId);
+    const targetDeviceLabel = targetMediaStream.getVideoTracks()[0].label;
+
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const targetDevice = devices.find(d => d.label === targetDeviceLabel);
+
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        deviceId: targetDevice.deviceId,
+        frameRate: {
+          max: fps
+        }
+      }
+    });
+
+    store.dispatch(tronRtcAction.replaceVideoTrack(mediaStream));
   }
 };
 

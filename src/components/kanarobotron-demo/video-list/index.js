@@ -10,6 +10,7 @@ class VideoList extends React.Component {
 
     this.loadVideoDevices = async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
+      console.log("devices", devices);
       const videoDevices = devices.filter(
         device => device.kind === "videoinput"
       );
