@@ -34,7 +34,6 @@ const KanaroboStatus = () => {
           padding: 0;
           list-style: none;
         }
-        
       `}</style>
     </div>
   );

@@ -58,7 +58,7 @@ class VideoContainer extends React.Component {
         <div>
           <video ref={this.localVideoRef} autoPlay />
           <p className="label">デバイス名 : {device.label}</p>
-          <p className="label">デバイスID : {device.deviceId}</p>
+          <p className="label deviceId">デバイスID : {device.deviceId}</p>
           <select value={frameRate} onChange={this.onSelectChanged}>
             <option value={1}>1 FPS</option>
             <option value={5}>5 FPS</option>
@@ -74,6 +74,9 @@ class VideoContainer extends React.Component {
           }
           .label {
             margin: 0.5rem 0 0.2rem 0;
+          }
+          .deviceId {
+            font-size: 0.3rem;
           }
         `}</style>
       </li>

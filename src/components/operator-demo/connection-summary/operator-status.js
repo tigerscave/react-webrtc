@@ -33,7 +33,6 @@ const OperatorStatus = () => {
           padding: 0 0 0 2rem;
           font-size: 1.2rem;
         }
-        
       `}</style>
     </div>
   );
