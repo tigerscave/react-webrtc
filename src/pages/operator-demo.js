@@ -1,6 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import UserList from "../components/operator-demo/user-list";
+import NavBar from "../components/operator-demo/navbar";
+import ConnectionSummary from "../components/operator-demo/connection-summary";
+
+import CameraList from "../components/operator-demo/camera-list";
+import AudioList from "../components/operator-demo/audio-list";
 
 import { registerSocketEvents as _registerSocketEvents } from "../redux/reducers/socketIo";
 
@@ -25,14 +30,15 @@ class OperatorDemoPage extends React.Component {
   }
 
   render() {
-    const { socketId, socket } = this.props;
+    const { socket } = this.props;
 
     return (
       <div>
-        <h1>Operator Demo</h1>
-        <p>Your socket id is {socketId}</p>
-        <input onChange={e => this.setState({ myName: e.target.value })} />
-        <button onClick={this.addName}>Join</button>
+        <NavBar />
+        <ConnectionSummary />
+        <CameraList />
+        <AudioList />
+        <hr />
         <UserList socket={socket} />
       </div>
     );
