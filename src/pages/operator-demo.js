@@ -35,11 +35,18 @@ class OperatorDemoPage extends React.Component {
     return (
       <div>
         <NavBar />
-        <ConnectionSummary />
-        <CameraList />
-        <AudioList />
+        <div className="content">
+          <ConnectionSummary />
+          <CameraList />
+          <AudioList />
+        </div>
         <hr />
         <UserList socket={socket} />
+        <style jsx>{`
+        .content {
+          margin: 0 5rem;
+        }
+      `}</style>
       </div>
     );
   }
