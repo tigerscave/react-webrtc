@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AccountMenuModal from "./account-menu-modal";
+import { mainBlue } from "../../consts/colors";
 
 const NavBar = () => {
   const [isModalShown, toggleModal] = useState(false);
@@ -55,7 +56,7 @@ const NavBar = () => {
         }
         .profileLogo i {
           font-size: 1.2rem;
-          background: #e5e5e5;
+          background: ${mainBlue}
           border-radius: 20rem;
           padding: 0.55rem 0.4rem 0.57rem 0.4rem;
         }
