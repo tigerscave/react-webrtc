@@ -42,8 +42,15 @@ class KanaroboStatus extends React.Component {
   }
 
   render() {
-    const { userList, fetchUserList } = this.props;
+    const {
+      userList,
+      fetchUserList,
+      signalingState,
+      iceConnectionState
+    } = this.props;
     const { selectedUserId } = this.state;
+    const isRobotConnected =
+      signalingState === "stable" && iceConnectionState === "connected";
     return (
       <div className="container">
         <div className="profile">
@@ -51,6 +58,19 @@ class KanaroboStatus extends React.Component {
           <img src={BackFourImg} alt="BackFourImg" />
         </div>
         <ul>
+          <li>
+            {isRobotConnected ? (
+              <div>
+                <i className="fas fa-circle"></i>
+                接続済み
+              </div>
+            ) : (
+              <div>
+                <i className="fas fa-circle"></i>
+                未接続
+              </div>
+            )}
+          </li>
           <li>
             名前：
             <select value={selectedUserId} onChange={this.onSelectChanged}>
@@ -65,7 +85,9 @@ class KanaroboStatus extends React.Component {
           </li>
           <li>種類：バックフォー</li>
           <li>メモ：重量12t。先月整備済み</li>
-          <button onClick={this.onCallButtonClicked}>リモート接続</button>
+          {!isRobotConnected && (
+            <button onClick={this.onCallButtonClicked}>リモート接続</button>
+          )}
         </ul>
         <style jsx>{`
           .container {
@@ -94,8 +116,11 @@ class KanaroboStatus extends React.Component {
 
 const mapStateToProps = state => {
   const { userList } = state.socketIo;
+  const { signalingState, iceConnectionState } = state.rtc;
   return {
-    userList
+    userList,
+    signalingState,
+    iceConnectionState
   };
 };
 
