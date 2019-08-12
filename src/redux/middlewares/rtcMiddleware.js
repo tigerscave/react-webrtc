@@ -39,6 +39,7 @@ const rtcMiddleware = store => next => async action => {
 
   if (action.type === rtcAction.NEGOTIATION_NEEDED) {
     const desc = await peerConnection.createOffer(offerOptions);
+    console.log(desc);
     if (desc) {
       await peerConnection.setLocalDescription(desc);
       socket.emit("offer", {

@@ -1,4 +1,5 @@
 import * as tronRtcAction from "../reducers/tronRtc";
+import { rewriteSdpForV9Codec } from "./helpers/rtcMiddlewareHelper";
 
 const offerOptions = {
   offerToReceiveAudio: 1,
@@ -41,8 +42,12 @@ const tronRtcMiddleware = store => next => async action => {
     await peerConnection.setRemoteDescription(description);
     const desc = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(desc);
+    const rewritedSdp = rewriteSdpForV9Codec(desc.sdp);
     socket.emit("answer", {
-      description: desc,
+      description: {
+        type: desc.type,
+        sdp: rewritedSdp
+      },
       userId: fromUserId
     });
   }
@@ -50,8 +55,6 @@ const tronRtcMiddleware = store => next => async action => {
   // TASK: refactoring this from here to media middleware
   if (action.type === tronRtcAction.ADD_VIDEO_TRACK) {
     const mediaStream = action.payload;
-    console.log(mediaStream);
-    console.log(mediaStream.getTracks());
 
     mediaStream.getTracks().forEach(track => {
       peerConnection.addTrack(track, mediaStream);
@@ -126,9 +129,13 @@ const tronRtcMiddleware = store => next => async action => {
   if (action.type === tronRtcAction.NEGOTIATION_NEEDED) {
     const desc = await peerConnection.createOffer(offerOptions);
     if (desc) {
+      const rewritedSdp = rewriteSdpForV9Codec(desc.sdp);
       await peerConnection.setLocalDescription(desc);
       socket.emit("offer", {
-        description: desc,
+        description: {
+          type: desc.type,
+          sdp: rewritedSdp
+        },
         userId: callerId
       });
     }
