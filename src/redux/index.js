@@ -5,13 +5,14 @@ import middlewares from "./middlewares";
 
 export const history = createBrowserHistory();
 
+const devTools = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__() : null
+
 const createStore = () =>
   _createStore(
     reducers(history),
     compose(
       middlewares(history),
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__()
+      devTools
     )
   );
 
