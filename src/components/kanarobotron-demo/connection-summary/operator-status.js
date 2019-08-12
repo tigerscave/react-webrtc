@@ -32,7 +32,7 @@ const OperatorStatus = () => (
       }
       ul li:first-child i {
         margin-right: 0.5rem;
-        color: #FF8A00;
+        color: #ff8a00;
       }
       ul li:first-child p {
         margin: 0;
@@ -51,7 +51,6 @@ const OperatorStatus = () => (
       .profile h3 {
         margin: 0;
       }
-      
     `}</style>
   </div>
 );

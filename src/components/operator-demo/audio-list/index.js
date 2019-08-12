@@ -12,10 +12,10 @@ const AudioList = () => {
         .container {
           margin: 4rem 0 6rem 2rem;
         }
-       .content {
-         margin-top: 2rem;
-       }
-       .content p {
+        .content {
+          margin-top: 2rem;
+        }
+        .content p {
           margin: 0;
           font-size: 1rem;
         }

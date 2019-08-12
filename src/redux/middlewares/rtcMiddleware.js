@@ -24,6 +24,10 @@ const rtcMiddleware = store => next => async action => {
       store.dispatch(rtcAction.signalingStateChange())
     );
 
+    peerConnection.addEventListener("connectionstatechange", () => {
+      store.dispatch(rtcAction.connectionStateChange());
+    });
+
     peerConnection.addEventListener("icecandidate", e =>
       store.dispatch(rtcAction.handleOnIceCandidate(e))
     );
@@ -52,6 +56,17 @@ const rtcMiddleware = store => next => async action => {
         candidate
       });
     }
+  }
+
+  if (action.type === rtcAction.RECEIVE_DESCRIPTION) {
+    const { description, fromUserId } = action.payload;
+    await peerConnection.setRemoteDescription(description);
+    const desc = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(desc);
+    socket.emit("answer", {
+      description: desc,
+      userId: fromUserId
+    });
   }
 };
 

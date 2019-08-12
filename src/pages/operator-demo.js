@@ -45,13 +45,13 @@ class OperatorDemoPage extends React.Component {
           <UserList socket={socket} />
         </div>
         <style jsx>{`
-        .content {
-          margin: 0 5rem;
-        }
-        .userList {
-          margin: 0 5rem;
-        }
-      `}</style>
+          .content {
+            margin: 0 5rem;
+          }
+          .userList {
+            margin: 0 5rem;
+          }
+        `}</style>
       </div>
     );
   }

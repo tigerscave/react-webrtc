@@ -8,7 +8,9 @@ const ConnectionSummary = () => {
       <li>
         <OperatorStatus />
       </li>
-      <li className="iconBox"><i className="fas fa-unlink"></i></li>
+      <li className="iconBox">
+        <i className="fas fa-unlink"></i>
+      </li>
       <li>
         <KanaroboStatus />
       </li>
@@ -25,12 +27,12 @@ const ConnectionSummary = () => {
         .iconBox {
           width: 60%;
           display: flex;
-      //    justify-content: center;
           align-items: center;
         }
         .iconBox i {
-          font-size: 8rem;
+          font-size: 6rem;
           margin-left: 4rem;
+          color: gray;
         }
       `}</style>
     </ul>

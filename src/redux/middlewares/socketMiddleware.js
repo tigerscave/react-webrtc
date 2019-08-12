@@ -1,4 +1,5 @@
 import * as socketIoAction from "../reducers/socketIo";
+import * as rtcAction from "../reducers/rtc";
 
 const socketMiddleware = store => next => action => {
   next(action);
@@ -26,6 +27,11 @@ const socketMiddleware = store => next => action => {
           console.warn("ERROR: setRemoteDescription");
         });
     });
+
+    //TASK : change all communication to message
+    socket.on("offerFromWarpGo", data => {
+      store.dispatch(rtcAction.receiveDescription(data));
+    });
   }
 
   if (action.type === socketIoAction.FETCH_USER_LIST) {
@@ -42,6 +48,15 @@ const socketMiddleware = store => next => action => {
           fps,
           mediaStreamId
         }
+      }
+    });
+  }
+
+  if (action.type === socketIoAction.MULTI_CAMERA_REQUEST) {
+    socket.emit("message", {
+      calleeId,
+      message: {
+        label: "multiCameraRequest"
       }
     });
   }

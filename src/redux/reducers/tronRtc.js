@@ -12,6 +12,9 @@ export const iceConnectionStateChange = createAction(
 export const SIGNALING_STATE_CHANGE = "tronRtc/SIGNALING_STATE_CHANGE";
 export const signalingStateChange = createAction(SIGNALING_STATE_CHANGE);
 
+export const CONNECTION_STATE_CHANGE = "tronRtc/CONNECTION_STATE_CHANGE";
+export const connectionStateChange = createAction(CONNECTION_STATE_CHANGE);
+
 export const RECEIVE_DESCRIPTION = "tronRtc/RECEIVE_DESCRIPTION";
 export const receiveDescription = createAction(RECEIVE_DESCRIPTION);
 
@@ -32,6 +35,12 @@ export const replaceVideoTrack = createAction(REPLACE_VIDEO_TRACK);
 
 export const UPDATE_VIDEO_FPS = "tronRtc/UPDATE_VIDEO_FPS";
 export const updateVideoFps = createAction(UPDATE_VIDEO_FPS);
+
+export const MULTI_CAMERA_STREAM = "tronRtc/MULTI_CAMERA_STREAM";
+export const multiCameraStream = createAction(MULTI_CAMERA_STREAM);
+
+export const NEGOTIATION_NEEDED = "tronRtc/NEGOTIATION_NEEDED";
+export const negotiationNeeded = createAction(NEGOTIATION_NEEDED);
 
 const INITIAL_STATE = {
   callerId: "",
@@ -67,6 +76,20 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case SIGNALING_STATE_CHANGE: {
       const { peerConnection } = state;
+      return {
+        ...state,
+        iceConnectionState: peerConnection.iceConnectionState,
+        connectionState: peerConnection.connectionState,
+        signalingState: peerConnection.signalingState,
+        iceGatheringState: peerConnection.iceGatheringState
+      };
+    }
+
+    case CONNECTION_STATE_CHANGE: {
+      const { peerConnection } = state;
+      if (peerConnection.connectionState === "connected") {
+        console.log(peerConnection.getTransceivers());
+      }
       return {
         ...state,
         iceConnectionState: peerConnection.iceConnectionState,
