@@ -1,9 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  addVideoTrack as _addVideoTrack,
-  replaceVideoTrack as _replaceVideoTrack
-} from "../../../redux/reducers/tronRtc";
+import { replaceVideoTrack as _replaceVideoTrack } from "../../../redux/reducers/tronRtc";
 
 class VideoContainer extends React.Component {
   constructor(props) {
@@ -20,10 +17,10 @@ class VideoContainer extends React.Component {
     this.onSelectChanged = e => {
       const frameRate = e.target.value;
       this.setState({ frameRate });
-      this.getUserVideoMedia(frameRate, true);
+      this.getUserVideoMedia(frameRate);
     };
 
-    this.getUserVideoMedia = async (frameRate, shouldUpdate) => {
+    this.getUserVideoMedia = async frameRate => {
       const { device } = this.props;
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: false,
@@ -34,21 +31,26 @@ class VideoContainer extends React.Component {
           }
         }
       });
-
-      const { addVideoTrack, replaceVideoTrack } = this.props;
-
-      if (shouldUpdate) {
-        replaceVideoTrack(mediaStream);
-      } else {
-        addVideoTrack(mediaStream);
-      }
       this.setLocalVideoStream(mediaStream);
+
+      const { replaceVideoTrack } = this.props;
+      replaceVideoTrack(mediaStream);
     };
   }
 
-  componentDidMount = async () => {
-    this.getUserVideoMedia(1);
-  };
+  async componentDidMount() {
+    const { device } = this.props;
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        deviceId: device.deviceId,
+        frameRate: {
+          max: 1
+        }
+      }
+    });
+    this.setLocalVideoStream(mediaStream);
+  }
 
   render() {
     const { device } = this.props;
@@ -86,7 +88,6 @@ class VideoContainer extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addVideoTrack: mediaStream => dispatch(_addVideoTrack(mediaStream)),
     replaceVideoTrack: mediaStream => dispatch(_replaceVideoTrack(mediaStream))
   };
 };

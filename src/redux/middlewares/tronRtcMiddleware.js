@@ -1,10 +1,15 @@
 import * as tronRtcAction from "../reducers/tronRtc";
 
+const offerOptions = {
+  offerToReceiveAudio: 1,
+  offerToReceiveVideo: 1
+};
+
 const tronRtcMiddleware = store => next => async action => {
   next(action);
 
   const { socket } = store.getState().tronSocketIo;
-  const { peerConnection } = store.getState().tronRtc;
+  const { peerConnection, callerId } = store.getState().tronRtc;
 
   if (action.type === tronRtcAction.REGISTER_PEER_EVENTS) {
     peerConnection.addEventListener("iceconnectionstatechange", () => {
@@ -17,6 +22,10 @@ const tronRtcMiddleware = store => next => async action => {
 
     peerConnection.addEventListener("connectionstatechange", () => {
       store.dispatch(tronRtcAction.connectionStateChange());
+    });
+
+    peerConnection.addEventListener("negotiationneeded", () => {
+      store.dispatch(tronRtcAction.negotiationNeeded());
     });
 
     peerConnection.addEventListener("datachannel", e => {
@@ -92,6 +101,37 @@ const tronRtcMiddleware = store => next => async action => {
     });
 
     store.dispatch(tronRtcAction.replaceVideoTrack(mediaStream));
+  }
+
+  // TASK: refactoring this from here to media middleware
+  if (action.type === tronRtcAction.MULTI_CAMERA_STREAM) {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(device => device.kind === "videoinput");
+
+    videoDevices.forEach(async videoDevice => {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          deviceId: videoDevice.deviceId,
+          frameRate: {
+            max: 1
+          }
+        }
+      });
+
+      store.dispatch(tronRtcAction.addVideoTrack(mediaStream));
+    });
+  }
+
+  if (action.type === tronRtcAction.NEGOTIATION_NEEDED) {
+    const desc = await peerConnection.createOffer(offerOptions);
+    if (desc) {
+      await peerConnection.setLocalDescription(desc);
+      socket.emit("offer", {
+        description: desc,
+        userId: callerId
+      });
+    }
   }
 };
 

@@ -29,6 +29,9 @@ export const assignDataChannel = createAction(ASSIGN_DATA_CHANNEL);
 export const HANDLE_ON_TRACK = "rtc/HANDLE_ON_TRACK";
 export const handleOnTrack = createAction(HANDLE_ON_TRACK);
 
+export const RECEIVE_DESCRIPTION = "rtc/RECEIVE_DESCRIPTION";
+export const receiveDescription = createAction(RECEIVE_DESCRIPTION);
+
 const INITIAL_STATE = {
   calleeId: "",
   peerConnection: new RTCPeerConnection(),
@@ -37,7 +40,8 @@ const INITIAL_STATE = {
   signalingState: "",
   iceGatheringState: "",
   sendChannel: null,
-  videoSrcObject: null
+  videoSrcObject: null,
+  mediaStreams: []
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -91,13 +95,15 @@ const reducer = (state = INITIAL_STATE, action) => {
       const { peerConnection } = state;
       if (peerConnection.connectionState === "connected") {
         console.log(peerConnection.getTransceivers());
+        console.log(peerConnection.getRemoteStreams());
       }
       return {
         ...state,
         iceConnectionState: peerConnection.iceConnectionState,
         connectionState: peerConnection.connectionState,
         signalingState: peerConnection.signalingState,
-        iceGatheringState: peerConnection.iceGatheringState
+        iceGatheringState: peerConnection.iceGatheringState,
+        mediaStreams: peerConnection.getRemoteStreams()
       };
     }
 
@@ -114,7 +120,7 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case HANDLE_ON_TRACK: {
       const event = action.payload;
-      console.log("event", event)
+      console.log("event", event);
       return {
         ...state,
         videoSrcObject: event.streams[0]

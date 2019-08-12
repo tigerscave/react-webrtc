@@ -1,40 +1,43 @@
 import React from "react";
 import { connect } from "react-redux";
 
-class CameraItems extends React.Component {
-  constructor(props) {
-    super(props);
+import { multiCameraRequest as _multiCameraRequest } from "../../../redux/reducers/socketIo";
 
-    this.remoteVideoRef = React.createRef();
-  }
-  componentDidMount() {
-    const { videoSrcObject } = this.props;
-    this.remoteVideoRef.current.srcObject = videoSrcObject;
-  }
+import VideoStream from "./video-stream";
 
-  render() {
-    return (
-      <div>
-        <p>ロボットが接続されました。</p>
-        <video ref={this.remoteVideoRef} autoPlay />
-        <style jsx>{`
-          video {
-            width: 20rem;
-          }
-        `}</style>
-      </div>
-    );
-  }
-}
+const CameraItems = props => {
+  const { multiCameraRequest, mediaStreams } = props;
+  return (
+    <div>
+      <p>ロボットが接続されました。</p>
+      <button onClick={multiCameraRequest}>カメラリクエスト</button>
+      {mediaStreams.map((stream, i) => (
+        <VideoStream stream={stream} key={i} />
+      ))}
+      <style jsx>{`
+        video {
+          width: 20rem;
+        }
+      `}</style>
+    </div>
+  );
+};
 
 const mapStateToProps = state => {
-  const { videoSrcObject } = state.rtc;
+  const { videoSrcObject, mediaStreams } = state.rtc;
   return {
-    videoSrcObject
+    videoSrcObject,
+    mediaStreams
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    multiCameraRequest: () => dispatch(_multiCameraRequest())
   };
 };
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(CameraItems);

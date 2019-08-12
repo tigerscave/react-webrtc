@@ -36,6 +36,12 @@ export const replaceVideoTrack = createAction(REPLACE_VIDEO_TRACK);
 export const UPDATE_VIDEO_FPS = "tronRtc/UPDATE_VIDEO_FPS";
 export const updateVideoFps = createAction(UPDATE_VIDEO_FPS);
 
+export const MULTI_CAMERA_STREAM = "tronRtc/MULTI_CAMERA_STREAM";
+export const multiCameraStream = createAction(MULTI_CAMERA_STREAM);
+
+export const NEGOTIATION_NEEDED = "tronRtc/NEGOTIATION_NEEDED";
+export const negotiationNeeded = createAction(NEGOTIATION_NEEDED);
+
 const INITIAL_STATE = {
   callerId: "",
   peerConnection: new RTCPeerConnection(),

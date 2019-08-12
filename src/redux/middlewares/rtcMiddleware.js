@@ -57,6 +57,17 @@ const rtcMiddleware = store => next => async action => {
       });
     }
   }
+
+  if (action.type === rtcAction.RECEIVE_DESCRIPTION) {
+    const { description, fromUserId } = action.payload;
+    await peerConnection.setRemoteDescription(description);
+    const desc = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(desc);
+    socket.emit("answer", {
+      description: desc,
+      userId: fromUserId
+    });
+  }
 };
 
 export default rtcMiddleware;
