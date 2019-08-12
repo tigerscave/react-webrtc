@@ -24,6 +24,10 @@ const rtcMiddleware = store => next => async action => {
       store.dispatch(rtcAction.signalingStateChange())
     );
 
+    peerConnection.addEventListener("connectionstatechange", () => {
+      store.dispatch(rtcAction.connectionStateChange());
+    });
+
     peerConnection.addEventListener("icecandidate", e =>
       store.dispatch(rtcAction.handleOnIceCandidate(e))
     );

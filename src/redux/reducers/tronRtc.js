@@ -12,6 +12,9 @@ export const iceConnectionStateChange = createAction(
 export const SIGNALING_STATE_CHANGE = "tronRtc/SIGNALING_STATE_CHANGE";
 export const signalingStateChange = createAction(SIGNALING_STATE_CHANGE);
 
+export const CONNECTION_STATE_CHANGE = "tronRtc/CONNECTION_STATE_CHANGE";
+export const connectionStateChange = createAction(CONNECTION_STATE_CHANGE);
+
 export const RECEIVE_DESCRIPTION = "tronRtc/RECEIVE_DESCRIPTION";
 export const receiveDescription = createAction(RECEIVE_DESCRIPTION);
 
@@ -67,6 +70,20 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case SIGNALING_STATE_CHANGE: {
       const { peerConnection } = state;
+      return {
+        ...state,
+        iceConnectionState: peerConnection.iceConnectionState,
+        connectionState: peerConnection.connectionState,
+        signalingState: peerConnection.signalingState,
+        iceGatheringState: peerConnection.iceGatheringState
+      };
+    }
+
+    case CONNECTION_STATE_CHANGE: {
+      const { peerConnection } = state;
+      if (peerConnection.connectionState === "connected") {
+        console.log(peerConnection.getTransceivers());
+      }
       return {
         ...state,
         iceConnectionState: peerConnection.iceConnectionState,

@@ -15,6 +15,10 @@ const tronRtcMiddleware = store => next => async action => {
       store.dispatch(tronRtcAction.signalingStateChange());
     });
 
+    peerConnection.addEventListener("connectionstatechange", () => {
+      store.dispatch(tronRtcAction.connectionStateChange());
+    });
+
     peerConnection.addEventListener("datachannel", e => {
       const { channel } = e;
       channel.addEventListener("message", event => {

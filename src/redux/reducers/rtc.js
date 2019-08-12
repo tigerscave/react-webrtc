@@ -14,6 +14,9 @@ export const iceConnectionStateChange = createAction(
 export const SIGNALING_STATE_CHANGE = "rtc/SIGNALING_STATE_CHANGE";
 export const signalingStateChange = createAction(SIGNALING_STATE_CHANGE);
 
+export const CONNECTION_STATE_CHANGE = "rtc/CONNECTION_STATE_CHANGE";
+export const connectionStateChange = createAction(CONNECTION_STATE_CHANGE);
+
 export const NEGOTIATION_NEEDED = "rtc/NEGOTIATION_NEEDED";
 export const negotiationNeeded = createAction(NEGOTIATION_NEEDED);
 
@@ -84,6 +87,20 @@ const reducer = (state = INITIAL_STATE, action) => {
       };
     }
 
+    case CONNECTION_STATE_CHANGE: {
+      const { peerConnection } = state;
+      if (peerConnection.connectionState === "connected") {
+        console.log(peerConnection.getTransceivers());
+      }
+      return {
+        ...state,
+        iceConnectionState: peerConnection.iceConnectionState,
+        connectionState: peerConnection.connectionState,
+        signalingState: peerConnection.signalingState,
+        iceGatheringState: peerConnection.iceGatheringState
+      };
+    }
+
     case HANDLE_ON_ICE_CANDIDATE: {
       const { peerConnection } = state;
       return {
@@ -97,6 +114,7 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case HANDLE_ON_TRACK: {
       const event = action.payload;
+      console.log("event", event)
       return {
         ...state,
         videoSrcObject: event.streams[0]
