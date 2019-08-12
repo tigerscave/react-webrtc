@@ -11,12 +11,14 @@ const CameraItems = props => {
     <div>
       <p>ロボットが接続されました。</p>
       <button onClick={multiCameraRequest}>カメラリクエスト</button>
-      {mediaStreams.map((stream, i) => (
-        <VideoStream stream={stream} key={i} />
-      ))}
+      <div className="streams">
+        {mediaStreams.map((stream, i) => (
+          <VideoStream stream={stream} key={i} />
+        ))}
+      </div>
       <style jsx>{`
-        video {
-          width: 20rem;
+        .streams {
+          display: flex;
         }
       `}</style>
     </div>
