@@ -152,13 +152,11 @@ const tronRtcMiddleware = store => next => async action => {
   }
 
   if (action.type === tronRtcAction.AUDIO_STREAM) {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-
-    const audioDevice = devices.find(
-      device => device.deviceId === action.payload
-    );
+    const audioDeviceId = action.payload;
     const audioStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
+      audio: {
+        deviceId: audioDeviceId
+      },
       video: false
     });
 

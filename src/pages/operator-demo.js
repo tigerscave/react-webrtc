@@ -9,28 +9,12 @@ import AudioList from "../components/operator-demo/audio-list";
 import { registerSocketEvents as _registerSocketEvents } from "../redux/reducers/socketIo";
 
 class OperatorDemoPage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      myName: ""
-    };
-
-    this.addName = () => {
-      const { myName } = this.state;
-      const { socket } = this.props;
-      socket.emit("addName", myName);
-    };
-  }
-
   componentDidMount() {
     const { registerSocketEvents } = this.props;
     registerSocketEvents();
   }
 
   render() {
-    const { socket } = this.props;
-
     return (
       <div>
         <NavBar />
@@ -49,14 +33,6 @@ class OperatorDemoPage extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  const { socketIo } = state;
-  return {
-    socket: socketIo.socket,
-    socketId: socketIo.socketId
-  };
-};
-
 const mapDispatchToProps = dispatch => {
   return {
     registerSocketEvents: () => dispatch(_registerSocketEvents())
@@ -64,6 +40,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(OperatorDemoPage);
