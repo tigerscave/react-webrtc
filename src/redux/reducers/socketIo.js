@@ -28,6 +28,9 @@ export const updateRemoteVideoConstraints = createAction(
 export const MULTI_CAMERA_REQUEST = "socket/MULTI_CAMERA_REQUEST";
 export const multiCameraRequest = createAction(MULTI_CAMERA_REQUEST);
 
+export const AUDIO_LIST_REQUEST = "socket/AUDIO_LIST_REQUEST";
+export const audioListRequest = createAction(AUDIO_LIST_REQUEST);
+
 const INITIAL_STATE = {
   socket: io("https://telp-public-server.herokuapp.com/"),
   socketId: "",

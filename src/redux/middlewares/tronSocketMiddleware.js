@@ -54,6 +54,11 @@ const tronSocketMiddleware = store => next => action => {
           break;
         }
 
+        case "audioListRequest": {
+          store.dispatch(tronRtcAction.audioListRequest());
+          break;
+        }
+
         default:
           return null;
       }

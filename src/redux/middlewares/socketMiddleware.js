@@ -61,6 +61,15 @@ const socketMiddleware = store => next => action => {
       }
     });
   }
+
+  if (action.type === socketIoAction.AUDIO_LIST_REQUEST) {
+    socket.emit("message", {
+      calleeId,
+      message: {
+        label: "audioListRequest"
+      }
+    });
+  }
 };
 
 export default socketMiddleware;

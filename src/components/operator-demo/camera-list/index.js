@@ -4,13 +4,11 @@ import { connect } from "react-redux";
 import CameraItems from "./camera-items";
 
 const CameraList = props => {
-  const { signalingState, iceConnectionState } = props;
-  const isRobotConnected =
-    signalingState === "stable" && iceConnectionState === "connected";
+  const { connectionState } = props;
   return (
     <div className="container">
       <h3>カメラ一覧</h3>
-      {isRobotConnected ? (
+      {connectionState === "connected" ? (
         <CameraItems />
       ) : (
         <div className="content">
@@ -35,10 +33,9 @@ const CameraList = props => {
 };
 
 const mapStateToProps = state => {
-  const { signalingState, iceConnectionState } = state.rtc;
+  const { connectionState } = state.rtc;
   return {
-    signalingState,
-    iceConnectionState
+    connectionState
   };
 };
 

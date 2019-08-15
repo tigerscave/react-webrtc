@@ -42,6 +42,9 @@ export const multiCameraStream = createAction(MULTI_CAMERA_STREAM);
 export const NEGOTIATION_NEEDED = "tronRtc/NEGOTIATION_NEEDED";
 export const negotiationNeeded = createAction(NEGOTIATION_NEEDED);
 
+export const AUDIO_LIST_REQUEST = "tronRtc/AUDIO_LIST_REQUEST";
+export const audioListRequest = createAction(AUDIO_LIST_REQUEST);
+
 const INITIAL_STATE = {
   callerId: "",
   peerConnection: new RTCPeerConnection(),
