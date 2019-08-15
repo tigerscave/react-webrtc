@@ -151,6 +151,20 @@ const tronRtcMiddleware = store => next => async action => {
     });
   }
 
+  if (action.type === tronRtcAction.AUDIO_STREAM) {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+
+    const audioDevice = devices.find(
+      device => device.deviceId === action.payload
+    );
+    const audioStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: false
+    });
+
+    store.dispatch(tronRtcAction.addVideoTrack(audioStream));
+  }
+
   if (action.type === tronRtcAction.NEGOTIATION_NEEDED) {
     const desc = await peerConnection.createOffer(offerOptions);
     if (desc) {

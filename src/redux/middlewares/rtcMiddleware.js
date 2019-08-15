@@ -32,9 +32,13 @@ const rtcMiddleware = store => next => async action => {
       store.dispatch(rtcAction.handleOnIceCandidate(e))
     );
 
-    peerConnection.addEventListener("track", e =>
-      store.dispatch(rtcAction.handleOnTrack(e))
-    );
+    peerConnection.addEventListener("track", e => {
+      if (e.track.kind === "audio") {
+        store.dispatch(rtcAction.handleAudioTrack(e));
+      } else {
+        store.dispatch(rtcAction.handleOnTrack(e));
+      }
+    });
   }
 
   if (action.type === rtcAction.NEGOTIATION_NEEDED) {

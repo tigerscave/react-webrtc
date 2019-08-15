@@ -87,6 +87,29 @@ const socketMiddleware = store => next => action => {
       }
     });
   }
+
+  if (action.type === socketIoAction.AUDIO_REQUEST) {
+    socket.emit("message", {
+      calleeId,
+      message: {
+        label: "audioRequest",
+        value: {
+          deviceId: action.payload
+        }
+      }
+    });
+  }
+
+  if (action.type === socketIoAction.RELOAD_CONNECTION) {
+    socket.emit("message", {
+      calleeId,
+      message: {
+        label: "reload"
+      }
+    });
+
+    window.location.reload();
+  }
 };
 
 export default socketMiddleware;

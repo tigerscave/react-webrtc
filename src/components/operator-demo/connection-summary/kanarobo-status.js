@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import BackFourImg from "../../../assets/images/backfour.png";
-import { fetchUserList as _fetchUserList } from "../../../redux/reducers/socketIo";
+import {
+  fetchUserList as _fetchUserList,
+  reloadConnection as _reloadConnection
+} from "../../../redux/reducers/socketIo";
 import {
   assignCalleeId as _assignCalleeId,
   registerPeerEvents as _registerPeerEvents,
@@ -46,7 +49,8 @@ class KanaroboStatus extends React.Component {
       userList,
       fetchUserList,
       signalingState,
-      iceConnectionState
+      iceConnectionState,
+      reloadConnection
     } = this.props;
     const { selectedUserId } = this.state;
     const isRobotConnected =
@@ -85,7 +89,9 @@ class KanaroboStatus extends React.Component {
           </li>
           <li>種類：バックフォー</li>
           <li>メモ：重量12t。先月整備済み</li>
-          {!isRobotConnected && (
+          {isRobotConnected ? (
+            <button onClick={reloadConnection}>リロード</button>
+          ) : (
             <button onClick={this.onCallButtonClicked}>リモート接続</button>
           )}
         </ul>
@@ -129,7 +135,8 @@ const mapDispatchToProps = dispatch => {
     fetchUserList: () => dispatch(_fetchUserList()),
     assignCalleeId: id => dispatch(_assignCalleeId(id)),
     registerPeerEvents: () => dispatch(_registerPeerEvents()),
-    assignDataChannel: () => dispatch(_assignDataChannel())
+    assignDataChannel: () => dispatch(_assignDataChannel()),
+    reloadConnection: () => dispatch(_reloadConnection())
   };
 };
 

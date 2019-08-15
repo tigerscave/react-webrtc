@@ -34,6 +34,12 @@ export const audioListRequest = createAction(AUDIO_LIST_REQUEST);
 export const RECEIVE_AUDIO_DEVICES = "socket/RECEIVE_AUDIO_DEVICES";
 export const receiveAudioDevices = createAction(RECEIVE_AUDIO_DEVICES);
 
+export const AUDIO_REQUEST = "socket/AUDIO_REQUEST";
+export const audioRequest = createAction(AUDIO_REQUEST);
+
+export const RELOAD_CONNECTION = "socket/RELOAD_CONNECTION";
+export const reloadConnection = createAction(RELOAD_CONNECTION);
+
 const INITIAL_STATE = {
   socket: io("https://telp-public-server.herokuapp.com/"),
   socketId: "",

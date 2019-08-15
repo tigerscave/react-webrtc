@@ -45,6 +45,9 @@ export const negotiationNeeded = createAction(NEGOTIATION_NEEDED);
 export const AUDIO_LIST_REQUEST = "tronRtc/AUDIO_LIST_REQUEST";
 export const audioListRequest = createAction(AUDIO_LIST_REQUEST);
 
+export const AUDIO_STREAM = "tronRtc/AUDIO_STREAM";
+export const audioStream = createAction(AUDIO_STREAM);
+
 const INITIAL_STATE = {
   callerId: "",
   peerConnection: new RTCPeerConnection(),
@@ -92,6 +95,9 @@ const reducer = (state = INITIAL_STATE, action) => {
       const { peerConnection } = state;
       if (peerConnection.connectionState === "connected") {
         console.log(peerConnection.getTransceivers());
+      }
+      if (peerConnection.connectionState === "disconnected") {
+        window.location.reload();
       }
       return {
         ...state,

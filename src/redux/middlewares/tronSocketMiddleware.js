@@ -59,6 +59,17 @@ const tronSocketMiddleware = store => next => action => {
           break;
         }
 
+        case "audioRequest": {
+          const { deviceId } = data.value;
+          store.dispatch(tronRtcAction.audioStream(deviceId));
+          break;
+        }
+
+        case "reload": {
+          window.location.reload();
+          break;
+        }
+
         default:
           return null;
       }

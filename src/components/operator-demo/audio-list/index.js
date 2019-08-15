@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import AudioItems from "./audio-items";
+import AudioStream from "./audio-stream";
 
 const AudioList = props => {
-  const { connectionState } = props;
+  const { connectionState, audioStream } = props;
   return (
     <div className="container">
       <h3>オーディオ一覧</h3>
@@ -15,6 +16,7 @@ const AudioList = props => {
           <p>リモート接続ボタンを押して、ロボットと接続してください。</p>
         </div>
       )}
+      {audioStream && <AudioStream audioStream={audioStream} />}
       <style jsx>{`
         .container {
           margin: 4rem 0 6rem 2rem;
@@ -32,9 +34,10 @@ const AudioList = props => {
 };
 
 const mapStateToProps = state => {
-  const { connectionState } = state.rtc;
+  const { connectionState, audioStream } = state.rtc;
   return {
-    connectionState
+    connectionState,
+    audioStream
   };
 };
 

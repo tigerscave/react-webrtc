@@ -32,6 +32,9 @@ export const handleOnTrack = createAction(HANDLE_ON_TRACK);
 export const RECEIVE_DESCRIPTION = "rtc/RECEIVE_DESCRIPTION";
 export const receiveDescription = createAction(RECEIVE_DESCRIPTION);
 
+export const HANDLE_AUDIO_TRACK = "rtc/HANDLE_AUDIO_TRACK";
+export const handleAudioTrack = createAction(HANDLE_AUDIO_TRACK);
+
 const INITIAL_STATE = {
   calleeId: "",
   peerConnection: new RTCPeerConnection(),
@@ -41,14 +44,13 @@ const INITIAL_STATE = {
   iceGatheringState: "",
   sendChannel: null,
   videoSrcObject: null,
-  mediaStreams: []
+  mediaStreams: [],
+  audioStream: null
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ASSIGN_CALLEE_ID: {
-      console.warn("---peerConnection---");
-      console.log(state.peerConnection);
       const { peerConnection } = state;
       return {
         ...state,
@@ -120,10 +122,18 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case HANDLE_ON_TRACK: {
       const event = action.payload;
-      console.log("event", event);
       return {
         ...state,
         videoSrcObject: event.streams[0]
+      };
+    }
+
+    case HANDLE_AUDIO_TRACK: {
+      const event = action.payload;
+      console.log(event);
+      return {
+        ...state,
+        audioStream: event.streams[0]
       };
     }
 
