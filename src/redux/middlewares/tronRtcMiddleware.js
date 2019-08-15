@@ -1,5 +1,8 @@
 import * as tronRtcAction from "../reducers/tronRtc";
-import { rewriteSdpForV9Codec } from "./helpers/rtcMiddlewareHelper";
+import {
+  rewriteSdpForV9Codec,
+  convertResolutionToWidth
+} from "./helpers/rtcMiddlewareHelper";
 
 const offerOptions = {
   offerToReceiveAudio: 1,
@@ -94,6 +97,7 @@ const tronRtcMiddleware = store => next => async action => {
     const targetDevice = devices.find(d => d.label === targetDeviceLabel);
 
     console.warn(resolution);
+    const maxWidth = convertResolutionToWidth(resolution);
 
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       audio: false,
@@ -101,6 +105,9 @@ const tronRtcMiddleware = store => next => async action => {
         deviceId: targetDevice.deviceId,
         frameRate: {
           max: fps
+        },
+        width: {
+          max: maxWidth
         }
       }
     });
@@ -120,6 +127,9 @@ const tronRtcMiddleware = store => next => async action => {
           deviceId: videoDevice.deviceId,
           frameRate: {
             max: 1
+          },
+          width: {
+            max: 1280
           }
         }
       });
