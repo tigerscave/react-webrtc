@@ -82,8 +82,8 @@ const tronRtcMiddleware = store => next => async action => {
   }
 
   // TASK: refactoring this from here to media middleware
-  if (action.type === tronRtcAction.UPDATE_VIDEO_FPS) {
-    const { fps, mediaStreamId } = action.payload;
+  if (action.type === tronRtcAction.UPDATE_VIDEO_CONSTRAINTS) {
+    const { fps, mediaStreamId, resolution } = action.payload;
 
     // find deviceId from mediaStream.id
     const localStreams = peerConnection.getLocalStreams();
@@ -92,6 +92,8 @@ const tronRtcMiddleware = store => next => async action => {
 
     const devices = await navigator.mediaDevices.enumerateDevices();
     const targetDevice = devices.find(d => d.label === targetDeviceLabel);
+
+    console.warn(resolution);
 
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       audio: false,

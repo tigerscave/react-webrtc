@@ -35,11 +35,17 @@ const tronSocketMiddleware = store => next => action => {
     socket.on("message", data => {
       console.log("data", data);
       switch (data.label) {
-        case "updateFps": {
-          const { fps, mediaStreamId } = data.value;
+        case "updateConstraints": {
+          const { fps, mediaStreamId, resolution } = data.value;
 
           // TASK: refactoring this from here to media action
-          store.dispatch(tronRtcAction.updateVideoFps({ fps, mediaStreamId }));
+          store.dispatch(
+            tronRtcAction.updateVideoConstraints({
+              fps,
+              mediaStreamId,
+              resolution
+            })
+          );
           break;
         }
 

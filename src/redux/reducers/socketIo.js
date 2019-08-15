@@ -19,8 +19,11 @@ export const fetchUserListSuccess = createAction(FETCH_USER_LIST_SUCCESS);
 export const REPLACE_VIDEO_TRACK = "socket/REPLACE_VIDEO_TRACK";
 export const replaceVideoTrack = createAction(REPLACE_VIDEO_TRACK);
 
-export const UPDATE_REMOTE_VIDEO_FPS = "socket/UPDATE_REMOTE_VIDEO_FPS";
-export const updateRemoteVideoFps = createAction(UPDATE_REMOTE_VIDEO_FPS);
+export const UPDATE_REMOTE_VIDEO_CONSTRAINTS =
+  "socket/UPDATE_REMOTE_VIDEO_CONSTRAINTS";
+export const updateRemoteVideoConstraints = createAction(
+  UPDATE_REMOTE_VIDEO_CONSTRAINTS
+);
 
 export const MULTI_CAMERA_REQUEST = "socket/MULTI_CAMERA_REQUEST";
 export const multiCameraRequest = createAction(MULTI_CAMERA_REQUEST);

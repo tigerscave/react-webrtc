@@ -33,8 +33,8 @@ export const handleNewIceCandidate = createAction(HANDLE_NEW_ICE_CANDIDATE);
 export const REPLACE_VIDEO_TRACK = "tronRtc/REPLACE_VIDEO_TRACK";
 export const replaceVideoTrack = createAction(REPLACE_VIDEO_TRACK);
 
-export const UPDATE_VIDEO_FPS = "tronRtc/UPDATE_VIDEO_FPS";
-export const updateVideoFps = createAction(UPDATE_VIDEO_FPS);
+export const UPDATE_VIDEO_CONSTRAINTS = "tronRtc/UPDATE_VIDEO_CONSTRAINTS";
+export const updateVideoConstraints = createAction(UPDATE_VIDEO_CONSTRAINTS);
 
 export const MULTI_CAMERA_STREAM = "tronRtc/MULTI_CAMERA_STREAM";
 export const multiCameraStream = createAction(MULTI_CAMERA_STREAM);

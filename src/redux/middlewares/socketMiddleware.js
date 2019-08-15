@@ -38,15 +38,16 @@ const socketMiddleware = store => next => action => {
     socket.emit("getUserList");
   }
 
-  if (action.type === socketIoAction.UPDATE_REMOTE_VIDEO_FPS) {
-    const { fps, mediaStreamId } = action.payload;
+  if (action.type === socketIoAction.UPDATE_REMOTE_VIDEO_CONSTRAINTS) {
+    const { fps, mediaStreamId, resolution } = action.payload;
     socket.emit("message", {
       calleeId,
       message: {
-        label: "updateFps",
+        label: "updateConstraints",
         value: {
           fps,
-          mediaStreamId
+          mediaStreamId,
+          resolution
         }
       }
     });

@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import UserList from "../components/operator-demo/user-list";
 import NavBar from "../components/operator-demo/navbar";
 import ConnectionSummary from "../components/operator-demo/connection-summary";
 
@@ -40,15 +39,8 @@ class OperatorDemoPage extends React.Component {
           <CameraList />
           <AudioList />
         </div>
-        <hr />
-        <div className="userList">
-          <UserList socket={socket} />
-        </div>
         <style jsx>{`
           .content {
-            margin: 0 5rem;
-          }
-          .userList {
             margin: 0 5rem;
           }
         `}</style>
