@@ -38,6 +38,12 @@ const tronRtcMiddleware = store => next => async action => {
         store.dispatch(tronRtcAction.receiveMessageDataChannel(event));
       });
     });
+
+    peerConnection.addEventListener("track", e => {
+      if (e.track.kind === "audio") {
+        store.dispatch(tronRtcAction.handleAudioTrack(e));
+      }
+    });
   }
 
   if (action.type === tronRtcAction.RECEIVE_DESCRIPTION) {

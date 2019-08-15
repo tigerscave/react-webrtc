@@ -48,6 +48,9 @@ export const audioListRequest = createAction(AUDIO_LIST_REQUEST);
 export const AUDIO_STREAM = "tronRtc/AUDIO_STREAM";
 export const audioStream = createAction(AUDIO_STREAM);
 
+export const HANDLE_AUDIO_TRACK = "tronRtc/HANDLE_AUDIO_TRACK";
+export const handleAudioTrack = createAction(HANDLE_AUDIO_TRACK);
+
 const INITIAL_STATE = {
   callerId: "",
   peerConnection: new RTCPeerConnection(),
@@ -55,7 +58,8 @@ const INITIAL_STATE = {
   connectionState: "",
   signalingState: "",
   iceGatheringState: "",
-  receivedData: null
+  receivedData: null,
+  audioStream: null
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -112,6 +116,15 @@ const reducer = (state = INITIAL_STATE, action) => {
       console.log(action.payload);
       return {
         ...state
+      };
+    }
+
+    case HANDLE_AUDIO_TRACK: {
+      const event = action.payload;
+      console.log(event);
+      return {
+        ...state,
+        audioStream: event.streams[0]
       };
     }
 

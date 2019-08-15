@@ -1,7 +1,7 @@
 import * as socketIoAction from "../reducers/socketIo";
 import * as rtcAction from "../reducers/rtc";
 
-const socketMiddleware = store => next => action => {
+const socketMiddleware = store => next => async action => {
   next(action);
   const { socket } = store.getState().socketIo;
   const { peerConnection, calleeId } = store.getState().rtc;
@@ -80,6 +80,15 @@ const socketMiddleware = store => next => action => {
   }
 
   if (action.type === socketIoAction.AUDIO_LIST_REQUEST) {
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: false
+    });
+
+    mediaStream.getTracks().forEach(track => {
+      peerConnection.addTrack(track, mediaStream);
+    });
+
     socket.emit("message", {
       calleeId,
       message: {

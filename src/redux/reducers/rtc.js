@@ -130,23 +130,11 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case HANDLE_AUDIO_TRACK: {
       const event = action.payload;
-      console.log(event);
       return {
         ...state,
         audioStream: event.streams[0]
       };
     }
-
-    // case CREATE_OFFER_SUCCESS: {
-    //   console.warn("CREATE_OFFER_SUCCESS")
-    //   console.log(action.payload)
-    //   const { peerConnection } = state;
-    //   return {
-    //     ...state,
-    //     iceConnectionState: peerConnection.iceConnectionState,
-    //     connectionState: peerConnection.connectionState
-    //   }
-    // }
 
     default: {
       return state;
