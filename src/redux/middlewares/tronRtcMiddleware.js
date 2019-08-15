@@ -138,6 +138,19 @@ const tronRtcMiddleware = store => next => async action => {
     });
   }
 
+  if (action.type === tronRtcAction.AUDIO_LIST_REQUEST) {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const audioDevices = devices.filter(device => device.kind === "audioinput");
+
+    socket.emit("message", {
+      calleeId: callerId,
+      message: {
+        label: "audioDevices",
+        value: audioDevices
+      }
+    });
+  }
+
   if (action.type === tronRtcAction.NEGOTIATION_NEEDED) {
     const desc = await peerConnection.createOffer(offerOptions);
     if (desc) {

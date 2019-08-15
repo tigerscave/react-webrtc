@@ -31,10 +31,14 @@ export const multiCameraRequest = createAction(MULTI_CAMERA_REQUEST);
 export const AUDIO_LIST_REQUEST = "socket/AUDIO_LIST_REQUEST";
 export const audioListRequest = createAction(AUDIO_LIST_REQUEST);
 
+export const RECEIVE_AUDIO_DEVICES = "socket/RECEIVE_AUDIO_DEVICES";
+export const receiveAudioDevices = createAction(RECEIVE_AUDIO_DEVICES);
+
 const INITIAL_STATE = {
   socket: io("https://telp-public-server.herokuapp.com/"),
   socketId: "",
-  userList: []
+  userList: [],
+  audioDevices: []
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -51,6 +55,13 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userList: action.payload
+      };
+    }
+
+    case RECEIVE_AUDIO_DEVICES: {
+      return {
+        ...state,
+        audioDevices: action.payload
       };
     }
 

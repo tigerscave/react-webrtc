@@ -32,6 +32,23 @@ const socketMiddleware = store => next => action => {
     socket.on("offerFromWarpGo", data => {
       store.dispatch(rtcAction.receiveDescription(data));
     });
+
+    socket.on("message", data => {
+      console.log("data", data);
+
+      switch (data.label) {
+        case "audioDevices": {
+          console.log(data.value);
+
+          // TASK: refactoring this action to operatorDevice
+          store.dispatch(socketIoAction.receiveAudioDevices(data.value));
+          break;
+        }
+
+        default:
+          return null;
+      }
+    });
   }
 
   if (action.type === socketIoAction.FETCH_USER_LIST) {
